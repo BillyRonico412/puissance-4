@@ -11,6 +11,11 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ModeRouteRouteImport } from './routes/$mode/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ModeIndexRouteImport } from './routes/$mode/index'
+import { Route as ModeChooseOpponentRouteImport } from './routes/$mode/choose-opponent'
+import { Route as ModeOnlineIndexRouteImport } from './routes/$mode/online/index'
+import { Route as ModeHumanIndexRouteImport } from './routes/$mode/human/index'
+import { Route as ModeAiIndexRouteImport } from './routes/$mode/ai/index'
 
 const ModeRouteRoute = ModeRouteRouteImport.update({
   id: '/$mode',
@@ -22,31 +27,91 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ModeIndexRoute = ModeIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ModeRouteRoute,
+} as any)
+const ModeChooseOpponentRoute = ModeChooseOpponentRouteImport.update({
+  id: '/choose-opponent',
+  path: '/choose-opponent',
+  getParentRoute: () => ModeRouteRoute,
+} as any)
+const ModeOnlineIndexRoute = ModeOnlineIndexRouteImport.update({
+  id: '/online/',
+  path: '/online/',
+  getParentRoute: () => ModeRouteRoute,
+} as any)
+const ModeHumanIndexRoute = ModeHumanIndexRouteImport.update({
+  id: '/human/',
+  path: '/human/',
+  getParentRoute: () => ModeRouteRoute,
+} as any)
+const ModeAiIndexRoute = ModeAiIndexRouteImport.update({
+  id: '/ai/',
+  path: '/ai/',
+  getParentRoute: () => ModeRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/$mode': typeof ModeRouteRoute
+  '/$mode': typeof ModeRouteRouteWithChildren
+  '/$mode/choose-opponent': typeof ModeChooseOpponentRoute
+  '/$mode/': typeof ModeIndexRoute
+  '/$mode/ai': typeof ModeAiIndexRoute
+  '/$mode/human': typeof ModeHumanIndexRoute
+  '/$mode/online': typeof ModeOnlineIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/$mode': typeof ModeRouteRoute
+  '/$mode/choose-opponent': typeof ModeChooseOpponentRoute
+  '/$mode': typeof ModeIndexRoute
+  '/$mode/ai': typeof ModeAiIndexRoute
+  '/$mode/human': typeof ModeHumanIndexRoute
+  '/$mode/online': typeof ModeOnlineIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/$mode': typeof ModeRouteRoute
+  '/$mode': typeof ModeRouteRouteWithChildren
+  '/$mode/choose-opponent': typeof ModeChooseOpponentRoute
+  '/$mode/': typeof ModeIndexRoute
+  '/$mode/ai/': typeof ModeAiIndexRoute
+  '/$mode/human/': typeof ModeHumanIndexRoute
+  '/$mode/online/': typeof ModeOnlineIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$mode'
+  fullPaths:
+    | '/'
+    | '/$mode'
+    | '/$mode/choose-opponent'
+    | '/$mode/'
+    | '/$mode/ai'
+    | '/$mode/human'
+    | '/$mode/online'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$mode'
-  id: '__root__' | '/' | '/$mode'
+  to:
+    | '/'
+    | '/$mode/choose-opponent'
+    | '/$mode'
+    | '/$mode/ai'
+    | '/$mode/human'
+    | '/$mode/online'
+  id:
+    | '__root__'
+    | '/'
+    | '/$mode'
+    | '/$mode/choose-opponent'
+    | '/$mode/'
+    | '/$mode/ai/'
+    | '/$mode/human/'
+    | '/$mode/online/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  ModeRouteRoute: typeof ModeRouteRoute
+  ModeRouteRoute: typeof ModeRouteRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +130,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$mode/': {
+      id: '/$mode/'
+      path: '/'
+      fullPath: '/$mode/'
+      preLoaderRoute: typeof ModeIndexRouteImport
+      parentRoute: typeof ModeRouteRoute
+    }
+    '/$mode/choose-opponent': {
+      id: '/$mode/choose-opponent'
+      path: '/choose-opponent'
+      fullPath: '/$mode/choose-opponent'
+      preLoaderRoute: typeof ModeChooseOpponentRouteImport
+      parentRoute: typeof ModeRouteRoute
+    }
+    '/$mode/online/': {
+      id: '/$mode/online/'
+      path: '/online'
+      fullPath: '/$mode/online'
+      preLoaderRoute: typeof ModeOnlineIndexRouteImport
+      parentRoute: typeof ModeRouteRoute
+    }
+    '/$mode/human/': {
+      id: '/$mode/human/'
+      path: '/human'
+      fullPath: '/$mode/human'
+      preLoaderRoute: typeof ModeHumanIndexRouteImport
+      parentRoute: typeof ModeRouteRoute
+    }
+    '/$mode/ai/': {
+      id: '/$mode/ai/'
+      path: '/ai'
+      fullPath: '/$mode/ai'
+      preLoaderRoute: typeof ModeAiIndexRouteImport
+      parentRoute: typeof ModeRouteRoute
+    }
   }
 }
 
+interface ModeRouteRouteChildren {
+  ModeChooseOpponentRoute: typeof ModeChooseOpponentRoute
+  ModeIndexRoute: typeof ModeIndexRoute
+  ModeAiIndexRoute: typeof ModeAiIndexRoute
+  ModeHumanIndexRoute: typeof ModeHumanIndexRoute
+  ModeOnlineIndexRoute: typeof ModeOnlineIndexRoute
+}
+
+const ModeRouteRouteChildren: ModeRouteRouteChildren = {
+  ModeChooseOpponentRoute: ModeChooseOpponentRoute,
+  ModeIndexRoute: ModeIndexRoute,
+  ModeAiIndexRoute: ModeAiIndexRoute,
+  ModeHumanIndexRoute: ModeHumanIndexRoute,
+  ModeOnlineIndexRoute: ModeOnlineIndexRoute,
+}
+
+const ModeRouteRouteWithChildren = ModeRouteRoute._addFileChildren(
+  ModeRouteRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  ModeRouteRoute: ModeRouteRoute,
+  ModeRouteRoute: ModeRouteRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

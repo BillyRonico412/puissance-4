@@ -1,4 +1,6 @@
-import { createFileRoute, notFound } from "@tanstack/react-router"
+import { Header } from "@app/components/Header"
+import { MainLayout, MainLayoutBody } from "@app/components/MainLayout"
+import { createFileRoute, notFound, Outlet } from "@tanstack/react-router"
 
 export const Route = createFileRoute("/$mode")({
 	component: RouteComponent,
@@ -10,5 +12,12 @@ export const Route = createFileRoute("/$mode")({
 })
 
 function RouteComponent() {
-	return <div>Hello "/$mode"!</div>
+	return (
+		<MainLayout>
+			<Header />
+			<MainLayoutBody>
+				<Outlet />
+			</MainLayoutBody>
+		</MainLayout>
+	)
 }
