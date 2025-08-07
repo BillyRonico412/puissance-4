@@ -1,6 +1,6 @@
 import { BoardPiecesImg } from "@app/components/Images"
 import { Button } from "@app/components/ui/button"
-import { createFileRoute, Link } from "@tanstack/react-router"
+import { createFileRoute } from "@tanstack/react-router"
 import { LucideBot, LucideGlobe2, LucideUser2 } from "lucide-react"
 
 export const Route = createFileRoute("/$mode/choose-opponent")({
