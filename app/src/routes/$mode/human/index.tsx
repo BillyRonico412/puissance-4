@@ -1,9 +1,20 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { Game } from "@app/components/game/Game"
+import { Button } from "@app/components/ui/button"
+import { createFileRoute } from "@tanstack/react-router"
+import { LucideRefreshCcw } from "lucide-react"
 
-export const Route = createFileRoute('/$mode/human/')({
-  component: RouteComponent,
+export const Route = createFileRoute("/$mode/human/")({
+	component: RouteComponent,
 })
 
 function RouteComponent() {
-  return <div>Hello "/$mode/human/"!</div>
+	return (
+		<div className="h-full flex flex-col justify-center-safe gap-16 items-center-safe">
+			<Game />
+			<Button size="lg" variant="outline">
+				<LucideRefreshCcw />
+				Recommencer la partie
+			</Button>
+		</div>
+	)
 }

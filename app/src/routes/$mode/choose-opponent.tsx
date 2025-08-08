@@ -1,4 +1,4 @@
-import { BoardPiecesImg } from "@app/components/Images"
+import { ImgBoardPieces } from "@app/components/Images"
 import { Button } from "@app/components/ui/button"
 import { createFileRoute } from "@tanstack/react-router"
 import { LucideBot, LucideGlobe2, LucideUser2 } from "lucide-react"
@@ -14,7 +14,7 @@ function RouteComponent() {
 				<p className="text-3xl font-bold italic">C'EST PARTI</p>
 				<p>pour une nouvelle partie</p>
 			</div>
-			<BoardPiecesImg className="translate-x-5 w-72" />
+			<ImgBoardPieces className="translate-x-5 w-72" />
 			<div className="flex flex-col gap-4">
 				<Route.Link to="/$mode/human">
 					<Button size="lg" className="min-w-48">

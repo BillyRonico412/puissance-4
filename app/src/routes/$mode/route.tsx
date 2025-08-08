@@ -8,6 +8,7 @@ export const Route = createFileRoute("/$mode")({
 		if (params.mode !== "online" && params.mode !== "offline") {
 			throw notFound()
 		}
+		window.localStorage.setItem("mode", params.mode)
 	},
 })
 
