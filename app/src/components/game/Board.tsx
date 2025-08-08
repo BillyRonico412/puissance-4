@@ -6,44 +6,42 @@ import { useAtomValue, useSetAtom } from "jotai"
 
 export const Board = () => {
 	const game = useAtomValue(gameAtoms.gameAtom)
-	const setClientHover = useSetAtom(animationAtoms.clientHoverAtom)
-	const setOffsetHover = useSetAtom(animationAtoms.offsetHoverAtom)
+	const setCoordHover = useSetAtom(animationAtoms.coordHoverAtom)
+	const dropCol = useSetAtom(animationAtoms.dropColAtom)
 	return (
 		<div
 			className="mt-16 relative board grid grid-rows-6 grid-cols-7 bg-primary rounded-3xl p-4 border-2 border-bleu-ciel shadow"
 			onMouseMove={(e) => {
-				setClientHover({
-					x: e.clientX,
-					y: e.clientY,
-				})
-				setOffsetHover({
-					x: e.clientX - e.currentTarget.getBoundingClientRect().left,
-					y: e.clientY - e.currentTarget.getBoundingClientRect().top,
+				setCoordHover({
+					client: { x: e.clientX, y: e.clientY },
+					offset: {
+						x: e.clientX - e.currentTarget.getBoundingClientRect().left,
+						y: e.clientY - e.currentTarget.getBoundingClientRect().top,
+					},
 				})
 			}}
+			onMouseUp={() => {
+				dropCol()
+				setCoordHover(undefined)
+			}}
 			onMouseLeave={() => {
-				setClientHover(undefined)
-				setOffsetHover(undefined)
+				setCoordHover(undefined)
 			}}
 			onTouchMove={(e) => {
 				if (e.touches.length > 0) {
-					setClientHover({
-						x: e.touches[0].clientX,
-						y: e.touches[0].clientY,
-					})
-					setOffsetHover({
-						x:
-							e.touches[0].clientX -
-							e.currentTarget.getBoundingClientRect().left,
-						y:
-							e.touches[0].clientY -
-							e.currentTarget.getBoundingClientRect().top,
+					const touch = e.touches[0]
+					setCoordHover({
+						client: { x: touch.clientX, y: touch.clientY },
+						offset: {
+							x: touch.clientX - e.currentTarget.getBoundingClientRect().left,
+							y: touch.clientY - e.currentTarget.getBoundingClientRect().top,
+						},
 					})
 				}
 			}}
 			onTouchEnd={() => {
-				setClientHover(undefined)
-				setOffsetHover(undefined)
+				dropCol()
+				setCoordHover(undefined)
 			}}
 		>
 			<PieceAnimate />

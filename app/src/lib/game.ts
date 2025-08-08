@@ -43,7 +43,7 @@ export class GameClass {
 		this.board[row * GameClass.NB_COLS + col] = value
 	}
 	reset(): void {
-		this.board.fill(0)
+		this.board = new Uint8Array(GameClass.NB_ROWS * GameClass.NB_COLS)
 	}
 	getRowAndColFromIndex(index: number): { row: number; col: number } {
 		if (index < 0 || index >= this.board.length) {
@@ -74,5 +74,16 @@ export class GameClass {
 			GameClass.NB_PIECES_PER_PLAYER -
 			this.board.filter((cell) => cell === player).length
 		)
+	}
+	getRowForCol(col: number): number | undefined {
+		if (col < 0 || col >= GameClass.NB_COLS) {
+			throw new Error("Column out of bounds")
+		}
+		for (let row = GameClass.NB_ROWS - 1; row >= 0; row--) {
+			if (this.getCell(row, col) === GameClass.EmptyCell) {
+				return row
+			}
+		}
+		return undefined
 	}
 }

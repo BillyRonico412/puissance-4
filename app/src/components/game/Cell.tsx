@@ -14,22 +14,19 @@ export const Cell = (props: { index: number; value: number }) => {
 	return (
 		<div
 			className={cn(`row-${row} col-${col} cell-${row}-${col}`, "p-0.5")}
-			onClick={() => {
-				gameAtoms.gameProxy.addPiece(col)
-			}}
 			ref={(el) => {
 				if (!el) {
 					return
 				}
 				const rect = el.getBoundingClientRect()
 				const size = Math.min(rect.width, rect.height)
-				setSizePiece(size)
+				setSizePiece(size - 4)
 			}}
 		>
 			<div className="w-full aspect-square p-0.5 rounded-full border-t-2 -rotate-45 border-bleu-ciel">
 				<div
 					className={cn(
-						"w-full aspect-square bg-white rounded-full transition-colors",
+						"w-full aspect-square bg-white rounded-full transition-colors cell",
 						{
 							"bg-gray-400": colHover === col,
 						},
