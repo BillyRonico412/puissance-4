@@ -53,9 +53,7 @@ const dropAtom = atom<
 >(undefined)
 
 const dropColAtom = atom(null, (get, set) => {
-	console.log("dropColAtom called")
 	const colHover = get(colHoverAtom)
-	console.log("colHover", colHover)
 	if (colHover !== undefined) {
 		const row = get(gameAtoms.gameAtom).getRowForCol(colHover)
 		if (row === undefined) {
@@ -80,8 +78,8 @@ const dropColAtom = atom(null, (get, set) => {
 					2,
 			},
 		})
+		set(coordHoverAtom, undefined)
 	}
-	set(coordHoverAtom, undefined)
 })
 
 const endDropAtom = atom(null, (get, set) => {

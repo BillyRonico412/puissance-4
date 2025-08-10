@@ -69,7 +69,7 @@ export class GameClass {
 		}
 		throw new Error("Column is full")
 	}
-	getNbPPiecesLeft(player: Player): number {
+	getNbPiecesLeft(player: Player): number {
 		return (
 			GameClass.NB_PIECES_PER_PLAYER -
 			this.board.filter((cell) => cell === player).length

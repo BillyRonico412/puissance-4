@@ -19,11 +19,12 @@ export const PieceAnimate = () => {
 					left: coordHover?.offset?.x ?? "50%",
 				}
 			: {
-					left: drop.coord.x,
-					top: drop.coord.y,
+					left: [coordHover?.offset?.x ?? "50%", drop.coord.x, drop.coord.x],
+					top: [-64, -64, drop.coord.y],
 				}
 	const transition: Transition = {
 		type: "tween",
+		ease: "easeOut",
 		duration: 0.2,
 		onComplete() {
 			endDrop()

@@ -26,7 +26,7 @@ export const Cell = (props: { index: number; value: number }) => {
 			<div className="w-full aspect-square p-0.5 rounded-full border-t-2 -rotate-45 border-bleu-ciel">
 				<div
 					className={cn(
-						"w-full aspect-square bg-white rounded-full transition-colors cell",
+						"w-full aspect-square relative z bg-white rounded-full transition-colors cell",
 						{
 							"bg-gray-400": colHover === col,
 						},

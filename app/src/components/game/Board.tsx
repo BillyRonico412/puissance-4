@@ -7,11 +7,15 @@ import { useAtomValue, useSetAtom } from "jotai"
 export const Board = () => {
 	const game = useAtomValue(gameAtoms.gameAtom)
 	const setCoordHover = useSetAtom(animationAtoms.coordHoverAtom)
+	const drop = useAtomValue(animationAtoms.dropAtom)
 	const dropCol = useSetAtom(animationAtoms.dropColAtom)
 	return (
 		<div
 			className="mt-16 relative board grid grid-rows-6 grid-cols-7 bg-primary rounded-3xl p-4 border-2 border-bleu-ciel shadow"
 			onMouseMove={(e) => {
+				if (drop) {
+					return
+				}
 				setCoordHover({
 					client: { x: e.clientX, y: e.clientY },
 					offset: {
@@ -28,16 +32,17 @@ export const Board = () => {
 				setCoordHover(undefined)
 			}}
 			onTouchMove={(e) => {
-				if (e.touches.length > 0) {
-					const touch = e.touches[0]
-					setCoordHover({
-						client: { x: touch.clientX, y: touch.clientY },
-						offset: {
-							x: touch.clientX - e.currentTarget.getBoundingClientRect().left,
-							y: touch.clientY - e.currentTarget.getBoundingClientRect().top,
-						},
-					})
+				if (e.touches.length === 0 || drop) {
+					return
 				}
+				const touch = e.touches[0]
+				setCoordHover({
+					client: { x: touch.clientX, y: touch.clientY },
+					offset: {
+						x: touch.clientX - e.currentTarget.getBoundingClientRect().left,
+						y: touch.clientY - e.currentTarget.getBoundingClientRect().top,
+					},
+				})
 			}}
 			onTouchEnd={() => {
 				dropCol()

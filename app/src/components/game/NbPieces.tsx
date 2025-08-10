@@ -40,7 +40,7 @@ const NbPiece = (
 			<p className="text-center font-medium text-lg italic">{playerName}</p>
 			<div className="flex items-center gap-2 justify-center">
 				<ImgPieces className="w-8" />
-				<div>x {game.getNbPPiecesLeft(props.player)}</div>
+				<div>x {game.getNbPiecesLeft(props.player)}</div>
 			</div>
 		</Card>
 	)
