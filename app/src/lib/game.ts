@@ -11,13 +11,14 @@ export class GameClass {
 		(GameClass.NB_ROWS * GameClass.NB_COLS) / 2
 	board: Uint8Array
 	playerTurn: Player = GameClass.Player1
+	winner: Player | undefined = undefined
 	constructor() {
 		this.board = new Uint8Array(GameClass.NB_ROWS * GameClass.NB_COLS)
 	}
 	getBoardArray(): number[] {
 		return Array.from(this.board)
 	}
-	getCell(row: number, col: number): number {
+	getCell(row: number, col: number): Cell {
 		if (
 			row < 0 ||
 			row >= GameClass.NB_ROWS ||
@@ -26,7 +27,14 @@ export class GameClass {
 		) {
 			throw new Error("Invalid cell coordinates")
 		}
-		return this.board[row * GameClass.NB_COLS + col]
+		const index = row * GameClass.NB_COLS + col
+		let cell: Cell = GameClass.EmptyCell
+		if (this.board[index] === GameClass.Player1) {
+			cell = GameClass.Player1
+		} else if (this.board[index] === GameClass.Player2) {
+			cell = GameClass.Player2
+		}
+		return cell
 	}
 	setCell(row: number, col: number, value: Cell): void {
 		if (
@@ -54,7 +62,7 @@ export class GameClass {
 		return { row, col }
 	}
 	addPiece(col: number): void {
-		if (col < 0 || col >= GameClass.NB_COLS) {
+		if (col < 0 || col >= GameClass.NB_COLS || !!this.winner) {
 			throw new Error("Column out of bounds")
 		}
 		for (let row = GameClass.NB_ROWS - 1; row >= 0; row--) {
@@ -64,6 +72,7 @@ export class GameClass {
 					this.playerTurn === GameClass.Player1
 						? GameClass.Player2
 						: GameClass.Player1
+				this.updateWinner()
 				return
 			}
 		}
@@ -75,7 +84,7 @@ export class GameClass {
 			this.board.filter((cell) => cell === player).length
 		)
 	}
-	getRowForCol(col: number): number | undefined {
+	getFreeRowForCol(col: number): number | undefined {
 		if (col < 0 || col >= GameClass.NB_COLS) {
 			throw new Error("Column out of bounds")
 		}
@@ -85,5 +94,47 @@ export class GameClass {
 			}
 		}
 		return undefined
+	}
+	updateWinner() {
+		const checkDirection = (row: number, col: number): Player | undefined => {
+			const directions = [
+				{ dr: 0, dc: 1 }, // Horizontal
+				{ dr: 1, dc: 0 }, // Vertical
+				{ dr: 1, dc: 1 }, // Diagonal down-right
+				{ dr: 1, dc: -1 }, // Diagonal down-left
+			]
+			for (const { dr, dc } of directions) {
+				let count = 0
+				for (let i = 0; i < 4; i++) {
+					const r = row + i * dr
+					const c = col + i * dc
+					if (
+						r < 0 ||
+						r >= GameClass.NB_ROWS ||
+						c < 0 ||
+						c >= GameClass.NB_COLS ||
+						this.getCell(r, c) !== this.playerTurn
+					) {
+						break
+					}
+					count++
+				}
+				if (count === 4) {
+					return this.playerTurn
+				}
+			}
+			return undefined
+		}
+		for (let row = 0; row < GameClass.NB_ROWS; row++) {
+			for (let col = 0; col < GameClass.NB_COLS; col++) {
+				if (this.getCell(row, col) === this.playerTurn) {
+					const winner = checkDirection(row, col)
+					if (winner !== undefined) {
+						this.winner = winner
+						return
+					}
+				}
+			}
+		}
 	}
 }

@@ -1,4 +1,4 @@
-import imgBoard from "@app/assets/board.png"
+import imgBoard from "@app/assets/board.svg"
 import imgBoardPieces from "@app/assets/board-pieces.png"
 import imgGoogle from "@app/assets/google.png"
 import imgPieces from "@app/assets/pieces.png"
@@ -33,8 +33,12 @@ export const ImgBoardPieces = (props: HTMLAttributes<HTMLImageElement>) => {
 	return <img {...props} src={imgBoardPieces} alt="Board Pieces" />
 }
 
-export const ImgBoard = (props: HTMLAttributes<HTMLImageElement>) => {
-	return <img {...props} src={imgBoard} alt="Board" />
+export const ImgBoard = (
+	props: HTMLAttributes<HTMLImageElement> & {
+		ref?: (el: HTMLImageElement | null) => void
+	},
+) => {
+	return <img {...props} src={imgBoard} alt="Board" ref={props.ref} />
 }
 
 export const ImgRedPiece = (

@@ -7,7 +7,7 @@ import type { TargetAndTransition, Transition } from "motion/react"
 
 export const PieceAnimate = () => {
 	const game = useAtomValue(gameAtoms.gameAtom)
-	const sizePiece = useAtomValue(animationAtoms.sizePieceAtom)
+	const pieceWidth = useAtomValue(animationAtoms.pieceWidthAtom)
 	const Comp =
 		game.playerTurn === GameClass.Player1 ? ImgRedPiece : ImgYellowPiece
 	const coordHover = useAtomValue(animationAtoms.coordHoverAtom)
@@ -25,7 +25,7 @@ export const PieceAnimate = () => {
 	const transition: Transition = {
 		type: "tween",
 		ease: "easeOut",
-		duration: 0.2,
+		duration: 0.5,
 		onComplete() {
 			endDrop()
 		},
@@ -33,9 +33,9 @@ export const PieceAnimate = () => {
 
 	return (
 		<Comp
-			className="piece absolute -top-16 -translate-x-1/2 z-100"
+			className="piece absolute -top-16 -translate-x-1/2 z-10 -rotate-45"
 			style={{
-				width: `${sizePiece}px`,
+				width: `${pieceWidth}px`,
 			}}
 			animate={animate}
 			transition={transition}

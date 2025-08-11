@@ -1,5 +1,6 @@
 import { Cell } from "@app/components/game/Cell"
 import { PieceAnimate } from "@app/components/game/PieceAnimate"
+import { ImgBoard } from "@app/components/Images"
 import { animationAtoms } from "@app/lib/animation"
 import { gameAtoms } from "@app/lib/atom"
 import { useAtomValue, useSetAtom } from "jotai"
@@ -9,9 +10,16 @@ export const Board = () => {
 	const setCoordHover = useSetAtom(animationAtoms.coordHoverAtom)
 	const drop = useAtomValue(animationAtoms.dropAtom)
 	const dropCol = useSetAtom(animationAtoms.dropColAtom)
+	const setImgBoardElement = useSetAtom(animationAtoms.imgBoardElementAtom)
 	return (
 		<div
-			className="mt-16 relative board grid grid-rows-6 grid-cols-7 bg-primary rounded-3xl p-4 border-2 border-bleu-ciel shadow"
+			className="mt-16 relative"
+			ref={(el) => {
+				if (!el) {
+					return
+				}
+				setImgBoardElement(el)
+			}}
 			onMouseMove={(e) => {
 				if (drop) {
 					return
@@ -49,6 +57,7 @@ export const Board = () => {
 				setCoordHover(undefined)
 			}}
 		>
+			<ImgBoard className="w-full z-20 relative" />
 			<PieceAnimate />
 			{game.getBoardArray().map((value, index) => (
 				<Cell key={index} index={index} value={value} />
