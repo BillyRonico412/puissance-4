@@ -26,7 +26,8 @@
 				"noStaticElementInteractions": "off",
 				"useKeyWithClickEvents": "off",
 				"useButtonType": "off",
-				"useKeyWithMouseEvents": "off"
+				"useKeyWithMouseEvents": "off",
+				"noSvgWithoutTitle": "off"
 			},
 			"correctness": {
 				"noNodejsModules": "off"

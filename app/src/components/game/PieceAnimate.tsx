@@ -13,15 +13,17 @@ export const PieceAnimate = () => {
 	const coordHover = useAtomValue(animationAtoms.coordHoverAtom)
 	const drop = useAtomValue(animationAtoms.dropAtom)
 	const endDrop = useSetAtom(animationAtoms.endDropAtom)
-	const animate: TargetAndTransition =
-		drop === undefined
-			? {
-					left: coordHover?.offset?.x ?? "50%",
-				}
-			: {
-					left: [coordHover?.offset?.x ?? "50%", drop.coord.x, drop.coord.x],
-					top: [-64, -64, drop.coord.y],
-				}
+	let animate: TargetAndTransition
+	if (!drop) {
+		animate = {
+			left: coordHover?.offset?.x ?? "50%",
+		}
+	} else {
+		animate = {
+			left: [coordHover?.offset?.x ?? "50%", drop.coord.x, drop.coord.x],
+			top: [-64, -64, drop.coord.y],
+		}
+	}
 	const transition: Transition = {
 		type: "tween",
 		ease: "easeOut",
@@ -29,6 +31,10 @@ export const PieceAnimate = () => {
 		onComplete() {
 			endDrop()
 		},
+	}
+
+	if (game.winner) {
+		return null
 	}
 
 	return (

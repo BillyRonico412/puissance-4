@@ -18,7 +18,7 @@ export const Cell = (props: { index: number; value: number }) => {
 				`row-${row} col-${col} cell-${row}-${col}`,
 				"absolute rounded-full z-10",
 				{
-					"bg-gray-400": colHover === col,
+					"bg-gray-400": colHover === col && !game.winner,
 				},
 			)}
 			style={{

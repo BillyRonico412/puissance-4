@@ -1,5 +1,14 @@
+import { listify } from "radash"
+
 export type Player = typeof GameClass.Player1 | typeof GameClass.Player2
 export type Cell = Player | typeof GameClass.EmptyCell
+
+type Winner = {
+	player: Player
+	direction: keyof typeof GameClass.winDirections
+	startRow: number
+	startCol: number
+}
 
 export class GameClass {
 	static readonly Player1 = 1
@@ -9,9 +18,15 @@ export class GameClass {
 	static readonly NB_COLS = 7
 	static readonly NB_PIECES_PER_PLAYER =
 		(GameClass.NB_ROWS * GameClass.NB_COLS) / 2
+	static readonly winDirections = {
+		vertical: { dr: 1, dc: 0 },
+		horizontal: { dr: 0, dc: 1 },
+		downRight: { dr: 1, dc: 1 },
+		downLeft: { dr: 1, dc: -1 },
+	} as const
 	board: Uint8Array
 	playerTurn: Player = GameClass.Player1
-	winner: Player | undefined = undefined
+	winner: Winner | undefined = undefined
 	constructor() {
 		this.board = new Uint8Array(GameClass.NB_ROWS * GameClass.NB_COLS)
 	}
@@ -52,6 +67,9 @@ export class GameClass {
 	}
 	reset(): void {
 		this.board = new Uint8Array(GameClass.NB_ROWS * GameClass.NB_COLS)
+		this.playerTurn =
+			Math.random() < 0.5 ? GameClass.Player1 : GameClass.Player2
+		this.winner = undefined
 	}
 	getRowAndColFromIndex(index: number): { row: number; col: number } {
 		if (index < 0 || index >= this.board.length) {
@@ -68,11 +86,11 @@ export class GameClass {
 		for (let row = GameClass.NB_ROWS - 1; row >= 0; row--) {
 			if (this.getCell(row, col) === GameClass.EmptyCell) {
 				this.setCell(row, col, this.playerTurn)
+				this.updateWinner()
 				this.playerTurn =
 					this.playerTurn === GameClass.Player1
 						? GameClass.Player2
 						: GameClass.Player1
-				this.updateWinner()
 				return
 			}
 		}
@@ -96,14 +114,9 @@ export class GameClass {
 		return undefined
 	}
 	updateWinner() {
-		const checkDirection = (row: number, col: number): Player | undefined => {
-			const directions = [
-				{ dr: 0, dc: 1 }, // Horizontal
-				{ dr: 1, dc: 0 }, // Vertical
-				{ dr: 1, dc: 1 }, // Diagonal down-right
-				{ dr: 1, dc: -1 }, // Diagonal down-left
-			]
-			for (const { dr, dc } of directions) {
+		const checkDirection = (row: number, col: number): Winner | undefined => {
+			for (const key of listify(GameClass.winDirections, (key) => key)) {
+				const { dr, dc } = GameClass.winDirections[key]
 				let count = 0
 				for (let i = 0; i < 4; i++) {
 					const r = row + i * dr
@@ -120,7 +133,12 @@ export class GameClass {
 					count++
 				}
 				if (count === 4) {
-					return this.playerTurn
+					return {
+						player: this.playerTurn,
+						direction: key as keyof typeof GameClass.winDirections,
+						startRow: row,
+						startCol: col,
+					}
 				}
 			}
 			return undefined

@@ -68,6 +68,9 @@ const dropAtom = atom<
 >(undefined)
 
 const dropColAtom = atom(null, (get, set) => {
+	if (get(gameAtoms.gameAtom).winner) {
+		return
+	}
 	const colHover = get(colHoverAtom)
 	if (colHover === undefined) {
 		return
@@ -98,6 +101,31 @@ const endDropAtom = atom(null, (get, set) => {
 	set(dropAtom, undefined)
 })
 
+const winnerLineAtom = atom((get) => {
+	const game = get(gameAtoms.gameAtom)
+	if (!game.winner) {
+		return undefined
+	}
+	const endRow =
+		game.winner.startRow + 3 * GameClass.winDirections[game.winner.direction].dr
+	const endCol =
+		game.winner.startCol + 3 * GameClass.winDirections[game.winner.direction].dc
+	const startElement = document.querySelector(
+		`.cell-${game.winner.startRow}-${game.winner.startCol}`,
+	) as HTMLElement
+	const endElement = document.querySelector(
+		`.cell-${endRow}-${endCol}`,
+	) as HTMLElement
+	if (!startElement || !endElement) {
+		return undefined
+	}
+	const x1 = startElement.offsetLeft + startElement.offsetWidth / 2
+	const y1 = startElement.offsetTop + startElement.offsetHeight / 2
+	const x2 = endElement.offsetLeft + endElement.offsetWidth / 2
+	const y2 = endElement.offsetTop + endElement.offsetHeight / 2
+	return { x1, y1, x2, y2 }
+})
+
 export const animationAtoms = {
 	colHoverAtom,
 	dropAtom,
@@ -108,4 +136,5 @@ export const animationAtoms = {
 	spacingWidthAtom,
 	pieceWidthAtom,
 	boardWidthAtom,
+	winnerLineAtom,
 }
